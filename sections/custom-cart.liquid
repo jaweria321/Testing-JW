@@ -1,0 +1,68 @@
+{{ "custom-cart.js" | asset_url | script_tag  }}
+{{ 'custom-cart.css' | asset_url | stylesheet_tag }}
+
+<div id="cart-drawer" class="cart-drawer" style="display: none;">
+    <div class="cart-drawer-overlay"></div>
+    <div class="cart-drawer-content">
+      <div class="cart-drawer-header">
+        <h2 class="cart-drawer-title">
+          {{ settings.drawer_title | default: 'Cart' }}
+          <span>{{ cart.item_count }} Item(s)</span>
+        </h2>
+        <button class="cart-drawer-close" onclick="closeCartDrawer()" aria-label="Close drawer">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      <div class="cart-drawer-body">
+        {%  for item in cart.items %}
+        <div class="cart-item-wrapper">
+          {{ item.image | image_url: width: 200 | image_tag }}
+          <div class="cart-item-content">
+            <h2>{{ item.title }}</h2>
+            <p>{{ item.final_price | money }}</p>
+            <div class="cart-item-actions">
+              <div class="quantity-controls">
+                <button class="quantity-btn decrease" {% if item.quantity <= 1 %} disabled{% endif %}>
+                  <svg width="8" height="3" viewBox="0 0 8 3" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.784 2.12V0.136H7.76V2.12H0.784Z" fill="#000000"/>
+                  </svg>
+                </button>
+                <input 
+                  id="quantity-input-{{ forloop.index }}" 
+                  type="number" 
+                  class="quantity-input" 
+                  value="{{ item.quantity }}" 
+                  min="1"
+                  max="40"
+                  readonly
+                />
+                <button class="quantity-btn increase" 
+                  {% if item.quantity == item.variant.inventory_quantity or item.quantity == 40 %} disabled{% endif %}
+                >
+                  <svg width="9" height="9" viewBox="0 0 9 9" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0.768 5.096V3.368H3.616V0.311999H5.488V3.368H8.352V5.096H5.488V8.136H3.616V5.096H0.768Z" fill="#000000"/>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+      </div>
+    </div>
+</div>
+{% schema %}
+{
+  "name": "Custom Cart Drawer",
+  "tag": "section",
+  "class": "custom-cart-section",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Custom Cart Drawer"
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,81 @@
+{{ 'custom-mega-menu.css' | asset_url | stylesheet_tag }}
+
+{%- style -%}
+     {% for i in (1..4) -%}
+   {% capture width %}width_{{ i }}{% endcapture %}
+  #mega-menu-items-wrapper-{{block.id}} .mega-menu-items-width-{{i}} {
+    width: {{ block.settings[width]  | append: '%' }};
+  }
+       {% endfor %}
+{%- endstyle -%}
+{% if link.title == block.settings.parent_menu_item %}
+  <div class="mega-menu-items-wrapper" id="mega-menu-items-wrapper-{{block.id}}">
+    <div class="mega-menu-items-inner-wrapper">
+      {% for i in (1..4) -%}
+        <div class="mega-menu-items mega-menu-items-width-{{i}}">
+          {% capture menu_variable %}menu_{{ i }}{% endcapture %}
+          {% assign menu_links = block.settings[menu_variable].links %}
+
+          {% capture hide_menu_variable %}hide_menu_{{ i }}{% endcapture %}
+          {% if block.settings[hide_menu_variable] == false %}
+            {% for childlink in menu_links %}
+              <div class="mega-menu-item">
+                <p class="menu-heading">
+                  {{ childlink.title }}
+                </p>
+                <ul>
+                  {%- for grandchildlink in childlink.links -%}
+                    <li>
+                      <a href="{{ grandchildlink.url }}">{{ grandchildlink.title }}</a>
+                    </li>
+                  {% endfor %}
+                </ul>
+              </div>
+            {% endfor %}
+          {% endif %}
+          {% capture collection_variable %}collection_{{ i }}{% endcapture %}
+          {% capture image_variable %}image_{{ i }}{% endcapture %}
+          {% capture title_variable %}collection_variable_{{ i }}{% endcapture %}
+          {% capture hide_collection_variable %}hide_collection_{{ i }}{% endcapture %}
+          {% if block.settings[hide_collection_variable] == false %}
+            <div class="mega-menu-collection">
+              {% if block.settings[image_variable] != blank %}
+                {{
+                  block.settings[image_variable]
+                  | image_url: width: 200
+                  | image_tag: loading: 'lazy', alt: block.settings[image_variable].alt
+                }}
+              {% else %}
+                {% if block.settings[collection_variable] != blank %}
+                  {{
+                    block.settings[collection_variable].featured_image
+                    | image_url: width: 200
+                    | image_tag: loading: 'lazy', alt: block.settings[collection_variable].featured_image.alt
+                  }}
+                {% endif %}
+              {% endif %}
+              {% if block.settings[title_variable] -%}
+                <p class="menu-collection-title">{{ block.settings[title_variable] }}</p>
+              {% else %}
+                <p class="menu-collection-title">{{ block.settings[collection_variable].title }}</p>
+              {% endif %}
+            </div>
+          {% endif %}
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+<script>
+    document.querySelectorAll('.header-navigation-hover-group').forEach(item => {
+    item.addEventListener('mouseenter', () => {
+      const dropdown = item.querySelector('.mega-menu-items-wrapper');
+      dropdown.classList.add('show');
+    });
+
+    item.addEventListener('mouseleave', () => {
+      const dropdown = item.querySelector('.mega-menu-items-wrapper');
+      dropdown.classList.remove('show');
+    });
+  });
+</script>

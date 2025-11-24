@@ -1,0 +1,114 @@
+@font-face {
+  font-family: "Intro Head B Base";
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/IntroHeadB-Base.woff?v=1741242052' | file_url }}) format("woff");
+}
+@font-face {
+  font-family: "Nexa Rust Sans";
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/NexaRustSans-Black.woff?v=1741242090' | file_url }}) format("woff");
+}
+.ingredients-price h2 {
+    font-family: 'Nexa Rust Sans';
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 48px;
+    color: #4D362A;
+    margin:0;
+    margin-bottom: 45px;
+}
+.ingredients-price p {
+    font-family: "Intro Head B Base";
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 34px;
+    color: #4D362A;
+    margin:0;
+    margin-bottom: 45px;
+}
+.ingredients-price a {
+    text-decoration: none;
+    color: #000;
+}
+.ingredients-price .btn {
+    font-family: 'Nexa Rust Sans';
+    font-size: 15px;
+    font-weight: 900;
+    width: 254px;
+    line-height: 59px;
+    background-color: #4D362A;
+    display: block;
+    color: #fff;
+    text-align: center;
+    border-radius: 29.5px;
+    margin-top: 38px;
+}
+.ingredients-price {
+  margin-bottom: 50px;
+}
+.ingredients-price-wrapper {
+    display: flex;
+    margin-top: 70px;
+}
+.ingredients-price-image-wrapper {
+    width: 50%;
+}
+.ingredients-price-text-outer-wrapper {
+    width: 50%;
+}
+.ingredients-price-text-wrapper {
+    max-width: 553px;
+    margin-left: 100px;
+    margin-top: 11px;
+}
+.ingredients-price-image-wrapper {
+    position: relative;
+    z-index: 8;
+}
+.ingredients-price-image {
+    position: relative;
+    z-index: 9;
+    margin-right: 23px;
+    margin-bottom: 25px;
+}
+.ingredients-price-image img {
+  width: 100%;
+  height: 100%;
+}
+.ingredients-price-dots {
+    position: absolute;
+    z-index: 2;
+    bottom: 0;
+    right: 0;
+}
+.ingredients-price-dots img {
+  width: 100%;
+  height: 100%;
+}
+@media only screen and (max-width: 1200px) {
+.ingredients-price-dots {
+    bottom: unset;
+    top: 0;
+    right: 0;
+}
+  .ingredients-price-image {
+    margin-bottom: 0;
+    margin-top: 25px;
+  }
+}
+@media only screen and (max-width: 991px) {
+  .ingredients-price-wrapper {
+      flex-wrap:wrap;
+  }
+  .ingredients-price-image-wrapper {
+      width: 100%;
+  }
+  .ingredients-price-text-outer-wrapper {
+      width: 100%;
+  }
+    .ingredients-price-text-wrapper {
+      max-width: 100%;
+      margin: 20px 40px 0 30px;
+  }
+  .ingredients-price .btn {
+    margin: auto;
+  }
+}

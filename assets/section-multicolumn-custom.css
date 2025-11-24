@@ -1,0 +1,75 @@
+@font-face {
+  font-family: "Intro Head B Base";
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/IntroHeadB-Base.woff?v=1741242052' | file_url }}) format("woff");
+}
+@font-face {
+  font-family: "Nexa Rust Sans";
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/NexaRustSans-Black.woff?v=1741242090' | file_url }}) format("woff");
+}
+@font-face {
+  font-family: 'Nexa Rust Sans Book 01';
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/NexaRustSans-Book01.woff?v=1741242123' | file_url }}) format("woff");
+}
+
+.best-selling-products-wrapper {
+    max-width: 1345px;
+    margin: auto;
+}
+.best-selling-products-wrapper h2 {
+    text-align: center;
+    font-family: 'Nexa Rust Sans';
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 48px;
+    color: #4D362A;
+}
+.product-cards {
+    display: flex;
+    justify-content: center;
+    gap: 1.25%;
+}
+.product-card {
+    width: 24%;
+    text-align: center;
+}
+.product-card img{
+    width: auto;
+    background-color: #F2F1DC;
+    border-radius: 10px;
+    padding: 5px 0;
+    width: 100%;
+    height: auto;
+}
+.product-type,
+.product-price{
+    font-family: 'Nexa Rust Sans Book 01';
+    font-size: 15px;
+    font-weight: 400;
+    line-height: 18px; 
+    color:black;
+    margin-bottom: 12px;
+    margin-top: 14px;
+}
+.product-title {
+    font-family: "Intro Head B Base";
+    font-size: 22px;
+    font-weight: 400;
+    color:black;
+    line-height: 26.66px; 
+    margin-bottom: 12px;
+    margin-top: 14px;
+}
+@media only screen and (max-width: 1200px) {
+  .product-cards {
+    flex-wrap: wrap;
+    row-gap: 30px;
+  }
+  .product-card {
+    width: 48%;
+  }
+}
+@media only screen and (max-width: 767px) {
+ .product-card {
+    width: 100%;
+  }
+}

@@ -1,0 +1,61 @@
+{{ 'component-image-with-text-custom.css' | asset_url | stylesheet_tag }}
+<div class="ingredients-price">
+      <div class="ingredients-price-wrapper">
+          <div class="ingredients-price-image-wrapper">
+              <div class="ingredients-price-dots">
+                <img src={{ 'brown-dots-1.png' | asset_url }} alt="" width="100" height="100">
+              </div>
+              <div class="ingredients-price-image">
+                  <img src={{ section.settings.image_with_text_image  | image_url  }} alt="" width="100" height="100">
+              </div>
+          </div>
+          <div class="ingredients-price-text-outer-wrapper">
+              <div class="ingredients-price-text-wrapper">
+                  <h2>{{ section.settings.image_with_text_heading }}</h2>
+                  <p>{{ section.settings.image_with_text_paragraph }}</p>
+                  <a href="{{ section.settings.image_with_text_button_link }}" class="btn">LEARN MORE</a>
+              </div>
+          </div>
+      </div>
+   {% content_for 'blocks' %}
+</div>
+
+{% schema %}
+  {
+    "name": "Image with text custom",
+    "tag": "section",
+    "class": "section",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "blocks": [{ "type": "@theme" },
+    { "type": "@app" }],
+    "settings": [
+      {
+        "type": "image_picker",
+        "id": "image_with_text_image",
+        "label": "Image"
+      },
+      {
+        "type": "text",
+        "id": "image_with_text_heading",
+        "label": "Heading"
+      },
+      {
+        "type": "textarea",
+        "id": "image_with_text_paragraph",
+        "label": "Paragraph text"
+      },
+      {
+        "type": "url",
+        "id": "image_with_text_button_link",
+        "label": "Button link"
+      }
+    ],
+    "presets": [
+      {
+        "name": "Image with text custom"
+      }
+    ]
+  }
+{% endschema %}

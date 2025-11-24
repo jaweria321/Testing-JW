@@ -1,0 +1,298 @@
+<style>
+  #filterform ul {
+    list-style: none;
+    padding: 0;
+  }
+ #filterform input[type=number], 
+  #filterform select {
+  padding: 12px 20px;
+  margin: 8px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+ #filterform  .form-control {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+  font-size: 22px;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+  /* Hide the browser's default checkbox */
+#filterform .form-control input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+/* Create a custom checkbox */
+#filterform .checkmark {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  height: 25px;
+  width: 25px;
+  border: 1px solid #ccc;
+  transform: translateY(-50%);
+}
+#filterform .form-control input[disabled] ~ .checkmark{
+  background: #eee;
+  border: unset;
+}
+/* On mouse-over, add a grey background color */
+#filterform .form-control:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+#filterform .form-control:hover input[disabled] ~ .checkmark{
+  background: #eee;
+  border: unset;
+}
+  #filterform .form-control:hover:has(input[disabled]) { 
+  cursor: no-drop;
+}
+/* When the checkbox is checked, add a blue background */
+#filterform .form-control input:checked ~ .checkmark {
+  background-color: #2196F3;
+}
+
+/* Create the checkmark/indicator (hidden when not checked) */
+#filterform .checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the checkmark when checked */
+#filterform .form-control input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the checkmark/indicator */
+#filterform .form-control .checkmark:after {
+  left: 9px;
+  top: 5px;
+  width: 5px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+}
+  details .filter-label, details .filter-label-active {
+    font-size: 20px;
+  }
+  .filter-content-area {
+    padding-left: 20px;
+  }
+</style>
+<form id="filterform">
+  <div id="filterformdata">
+      {%- for filter in collection.filters -%}
+    <details>
+      <summary>
+        <div>
+          <span class="filter-label">{{ filter.label }}</span>
+
+          {%- if filter.active_values.size > 0 -%}
+            <span class="filter-label-active">({{ filter.active_values.size }})</span>
+          {%- endif -%}
+        </div>
+      </summary>
+
+      <div class="filter-content-area">
+        <div>
+          <p>{{ filter.active_values.size }} selected</p>
+          {%- if filter.active_values.size > 0 -%}
+            <p><a href="{{ filter.url_to_remove }}">Reset</a></p>
+          {%- endif -%}
+        </div>
+        {%- case filter.type -%}
+          {%- when 'boolean' -%}
+            <ul>
+                <li>
+                  <label for="Filter-{{ filter.param_name }}-{{ filter.true_value.value }}">
+                  <input type="checkbox"
+                    name="{{ filter.param_name }}"
+                    value="{{ filter.true_value.value }}"
+                    id="Filter-{{ filter.param_name }}"
+                    {% if filter.true_value.active -%}checked{%- endif %}
+                    {% if filter.true_value.count == 0 and filter.true_value.active == false -%}disabled{%- endif -%}
+                  >{{ filter.true_value.label }}</label>
+                </li>
+                <li>
+                  <label for="Filter-{{ filter.param_name }}-{{ filter.false_value.value }}">
+                  <input type="checkbox"
+                    name="{{ filter.param_name }}"
+                    value="{{ filter.false_value.value }}"
+                    id="Filter-{{ filter.param_name }}"
+                    {% if filter.false_value.active -%}checked{%- endif %}
+                    {% if filter.false_value.count == 0 and filter.false_value.active == false -%}disabled{%- endif %}
+                  >{{ filter.false_value.label }}</label>
+                </li>
+            </ul>
+
+            <!-- <div>
+              <input type="submit" value="Apply">
+            </div> -->
+          {%- when 'list' -%}
+            <ul>
+              {%- for filter_value in filter.values -%}
+                <li>
+                  <label for="Filter-{{ filter.param_name }}-{{ forloop.index }}" class="form-control">
+                  <input type="checkbox"
+                    name="{{ filter_value.param_name }}"
+                    value="{{ filter_value.value }}"
+                    id="Filter-{{ filter.param_name }}-{{ forloop.index }}"
+                    {% if filter_value.active -%}checked{%- endif %}
+                    {% if filter_value.count == 0 and filter_value.active == false -%}disabled{%- endif %}
+                  >
+                    <span class="checkmark"></span>
+                    <span>{{ filter_value.label }}</span>
+                  </label>
+                </li>
+              {%- endfor -%}
+            </ul>
+
+            <!-- <div>
+              <input type="submit" value="Apply">
+            </div> -->
+          {%- when 'price_range' -%}
+            <div class="filter-group-display__price-range">
+              <div class="filter-group-display__price-range-from">
+                <span>{{ cart.currency.symbol }}</span>
+
+                <input name="{{ filter.min_value.param_name }}"
+                  id="Filter-{{ filter.min_value.param_name }}"
+                  {% if filter.min_value.value -%}
+                    value="{{ filter.min_value.value | money_without_currency | replace: ',', '' }}"
+                  {%- endif %}
+                  type="number"
+                  placeholder="0"
+                  min="0"
+                  max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                >
+
+                <label for="Filter-{{ filter.min_value.param_name }}">From</label>
+              </div>
+              <div class="filter-group-display__price-range-to">
+                <span>{{ cart.currency.symbol }}</span>
+
+                <input name="{{ filter.max_value.param_name }}"
+                  id="Filter-{{ filter.max_value.param_name }}"
+                  {% if filter.max_value.value -%}
+                    value="{{ filter.max_value.value | money_without_currency | replace: ',', '' }}"
+                  {%- endif %}
+                  type="number"
+                  placeholder="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                  min="0"
+                  max="{{ filter.range_max | money_without_currency | replace: ',', '' }}"
+                >
+
+                <label for="Filter-{{ filter.max_value.param_name }}">To</label>
+              </div>
+            </div>
+
+            <!-- <div class="filter-group-display__submit">
+              <input type="submit" value="Apply">
+            </div> -->
+        {%- endcase -%}
+      </div>
+    </details>
+  {%- endfor -%}
+  </div>
+
+  <div>
+    <p><a href="{{ collection.url }}">Clear all</a></p>
+
+    {%- for filter in collection.filters -%}
+      {%- if filter.type == "price_range" -%}
+        {%- if filter.min_value.value != nil or filter.max_value.value != nil -%}
+          <p>
+            <a href="{{ filter.url_to_remove }}">
+              {%- assign min_value = filter.min_value.value | default: 0 -%}
+              {%- assign max_value = filter.max_value.value | default: filter.range_max -%}
+              {{ min_value | money }} - {{ max_value | money }} X
+            </a>
+          </p>
+        {%- endif -%}
+      {%- else -%}
+        {%- for filter_value in filter.active_values -%}
+          <p>
+            <a href="{{ filter_value.url_to_remove }}">
+              {{ filter.label }}: {{ filter_value.label }} X
+            </a>
+          </p>
+        {%- endfor -%}
+      {%- endif -%}
+    {%- endfor -%}
+
+  </div>
+</form>
+<script>
+function attachFilterListeners() {
+  const filterForm = document.getElementById("filterform");
+
+  if (!filterForm) return;
+
+  // Submit handler
+  filterForm.addEventListener("submit", function (e) {
+    e.preventDefault();
+    console.log("submitted");
+    const minPrice = document.getElementById("Filter-filter.v.price.gte");
+    const maxPrice = document.getElementById("Filter-filter.v.price.lte");
+  
+    if (!minPrice.value) minPrice.removeAttribute("name");
+    if (!maxPrice.value) maxPrice.removeAttribute("name");
+
+
+    const params = new URLSearchParams(new FormData(filterForm)).toString();
+    const url = `${window.location.pathname}?${params}`;
+
+    console.log("fetching");
+    fetch(url)
+      .then((res) => res.text())
+      .then((html) => {
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+
+        // Update product grid
+        const newGrid = doc.querySelector("#product-grid");
+        document.querySelector("#product-grid").innerHTML = newGrid.innerHTML;
+
+        // Update filter form
+        const newFilters = doc.querySelector("#filterform");
+        document.querySelector("#filterform").innerHTML = newFilters.innerHTML;
+
+        console.log("updated");
+
+        history.pushState({}, "", url);
+
+        // Reattach listeners after DOM update
+        attachFilterListeners();
+      });
+  });
+
+  // Auto-submit on change
+  filterForm.querySelectorAll("input").forEach((input) => {
+    input.addEventListener("change", () => {
+      filterForm.dispatchEvent(new Event("submit"));
+    });
+  });
+}
+
+// Call initially
+attachFilterListeners();
+
+
+
+</script>

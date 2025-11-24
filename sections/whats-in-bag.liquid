@@ -1,0 +1,61 @@
+{{ 'whats-in-bag.css' | asset_url | stylesheet_tag }}
+
+
+      <div class="whats-in-bag-outer-wrapper">
+        <div class="whats-in-bag-content-wrapper">
+          <div class="tab">
+          {% for productingredent in shop.metaobjects.ingredients.values %}
+            
+            {% if forloop.first %}
+              <button class="bagtablinks" onclick="openBagTab(event, 'bagtablink{{ forloop.index0 }}')" id="defaultOpenedTab">
+                <span class="ingredient_image_wrapper">
+                  <span class="tab-toggle-image"> 
+                    <img src={{ 'plus.png'  | asset_url  }} alt="" class="toggle-image">
+                    <img src={{ 'minus.png'  | asset_url  }} alt="" class="toggle-image-active">
+                  </span>
+                  <img src={{ productingredent.ingredient_image  | image_url  }} class="ingredient_image" alt="" >
+                </span>
+                <span class="bagtablinks_text">{{ productingredent.ingredient_title }}</span> 
+              </button>
+            {% else %}
+              <button class="bagtablinks" onclick="openBagTab(event, 'bagtablink{{ forloop.index0 }}')" >
+                <span class="ingredient_image_wrapper">
+                  <span class="tab-toggle-image"> 
+                    <img src={{ 'plus.png'  | asset_url  }} alt="" class="toggle-image">
+                    <img src={{ 'minus.png'  | asset_url  }} alt="" class="toggle-image-active">
+                  </span>
+                  <img src={{ productingredent.ingredient_image  | image_url  }} class="ingredient_image" alt="" >
+                </span>
+                <span class="bagtablinks_text">{{ productingredent.ingredient_title }}</span>
+              </button>
+            {% endif %}
+          {% endfor %}
+          </div>
+          {% for productingredent in shop.metaobjects.ingredients.values -%}
+
+            <div id="bagtablink{{ forloop.index0 }}" class="bagtabcontent">
+              <h2>{{ product.metafields.custom.product_subtitle.value }}</h2>
+              <p class="bagtabcontent-subtitle">{{ product.metafields.custom.product_paragraph.value }}</p>
+              <p class="bagtabcontent-tabtitle">{{ productingredent.ingredient_title }}</p>
+              <p class="bagtabcontent-text">{{ productingredent.ingredient_text }}</p>
+            </div>
+          {% endfor %}
+        </div>
+        
+      </div>
+
+<script src="{{ 'whats-in-bag-tabs.js' | asset_url }}" ></script>
+
+{% schema %}
+  {
+    "name": "What's in Bag",
+    "settings": [
+    ],
+
+    "presets": [
+      {
+        "name": "What's in Bag"
+      }
+    ]
+  }
+{% endschema %}

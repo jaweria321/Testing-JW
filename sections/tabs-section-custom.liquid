@@ -1,0 +1,137 @@
+{{ 'section-tabs-custom.css' | asset_url | stylesheet_tag }}
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
+    />
+    <script src="{{ 'swiper-bundle.min.js' | asset_url }}" ></script>
+
+  <div class="best-selling-products">
+      <div class="best-selling-products-wrapper">
+        <h2>Best Selling Products</h2>
+        <div class="best-selling-products-tabs-wrapper">     
+          <div class="tab">
+            {% for block in section.blocks %}
+              {% if forloop.first %}
+                <button class="tablinks" onclick="openTab(event, '{{ block.id}}')" id="defaultOpen">{{ block.settings.tab_name }}</button>
+              {% else %}
+              
+                <button class="tablinks" onclick="openTab(event, '{{ block.id}}')" >{{ block.settings.tab_name }}</button>
+                {% endif %}
+            {% endfor %}
+          </div>
+          {% for block in section.blocks %}
+            <div id="{{ block.id}}" class="producttabcontent">
+              <div class="swiper products-swiper">
+                <div class="swiper-wrapper">
+                  {% for product in block.settings.collection.products  %}
+                    <div class="swiper-slide">
+                          <div class="product-image-wrapper">
+                             <img src={{ product.featured_image | image_url }} class="product-image" alt="" width="100" height="100">
+                            {% if product.images[1] != nil %}
+                              <img src={{ product.images[1] | image_url }} class="image-hover" alt="" width="100" height="100">
+                            {% endif %}
+                          </div>
+                          <p class="product-type">{{  product.type  }}</p>
+                          <p class="product-title">{{  product.title }}</p>
+                          <p class="product-price">{{ product.price | money }}</p>
+                    </div>
+                  {% endfor %}
+                </div>
+                <!-- Pagination & Navigation -->
+                <div class="products-swiper-pagination"></div>   
+            </div>
+              <div> <a href="{{ block.settings.collection.url }}" class="buy-btn">buy Now</a> </div>
+          </div>
+            
+          {% endfor %}
+        </div>
+        
+      </div>
+  </div>
+
+
+<script>
+  function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("producttabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+      tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+      tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+  }
+  
+  // Get the element with id="defaultOpen" and click on it
+  document.getElementById("defaultOpen").click();
+    const swiper = new Swiper(".products-swiper", {
+    loop: true,
+    slidesPerView: 4,
+    spaceBetween: 20,
+    pagination: {
+        el: ".products-swiper-pagination",
+        clickable: true,
+    },
+    breakpoints: {
+      // when window width is >= 320px
+      320: {
+        slidesPerView: 1
+      },
+      767: {
+        slidesPerView: 2
+      },
+      992: {
+        slidesPerView: 3
+      },
+      1080: {
+        slidesPerView: 4
+      }
+    }
+});
+</script>
+
+{% schema %}
+  {
+    "name": "Tabs Section Custom",
+    "class": "section",
+    "tag": "section",
+    "disabled_on": {
+      "groups": ["header", "footer"]
+    },
+    "settings": [
+
+
+    ],
+    "blocks": [
+      {
+        "type": "tab",
+        "name": "tab-content",
+        "settings": [
+          {
+            "type": "text",
+            "id": "tab_name",
+            "label": "Tab Name",
+          },
+          {
+            "type": "collection",
+            "id": "collection",
+            "label": "Collection"
+          }
+        ]
+      }, 
+    ],
+    "presets": [
+      {
+        "name": "Tabs Section Custom",
+        "blocks": [
+          {
+            "type": "tab"
+          }
+        ]
+      }
+    ]
+  }
+{% endschema %}

@@ -1,0 +1,11 @@
+{{ 'accordion-style.css' | asset_url | stylesheet_tag }}
+
+  <div class="accordion-item">
+    <div class="accordion-item-header">{{ block.settings['accordion-heading'] }}</div>
+    <div class="accordion-item-body">
+      <div class="accordion-item-body-content">
+        {{ block.settings['accordion-text'] }}
+      </div>
+    </div>
+  </div>
+

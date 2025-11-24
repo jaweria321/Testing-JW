@@ -1,0 +1,95 @@
+@font-face {
+  font-family: "Intro Head B Base";
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/IntroHeadB-Base.woff?v=1741242052' | file_url }}) format("woff");
+}
+@font-face {
+  font-family: "Nexa Rust Sans";
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/NexaRustSans-Black.woff?v=1741242090' | file_url }}) format("woff");
+}
+@font-face {
+  font-family: 'Nexa Rust Sans Book 01';
+  src: url({{ 'https://cdn.shopify.com/s/files/1/0646/8360/6086/files/NexaRustSans-Book01.woff?v=1741242123' | file_url }}) format("woff");
+}
+.real-pets-section {
+    margin-top: 90px;
+    margin-bottom: 208px;
+}
+.real-pets-heading-block {
+    max-width: 885px;
+    margin: auto;
+    text-align: center;
+}
+.real-pets-heading-block h2 {
+
+    margin-bottom: 52px;
+    font-family: 'Nexa Rust Sans';
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 48px;
+    color: #4D362A;
+}
+.real-pets-heading-block p {
+    margin-bottom: 55px;
+    font-family: 'Intro Head B Base';
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 34px;
+    color: #4D362A;
+}
+
+.real-pets-cards-block {
+    display: flex;
+    gap: 1.25%;
+    margin-left: 58px;
+    margin-right: 22px;
+}
+.real-pets-image-card {
+    border-radius: 30px;
+    width: 24%;
+}
+.real-pets-image-card img {
+    width: 100%;
+    height: 100%;
+}
+.real-pets-text-card {
+    padding: 30px 33px 58px 33px;
+    border-radius: 30px;
+    background-color: #5F3C2E;
+    width: 24%;
+}
+.real-pets-card-stars {
+    display: flex;
+    justify-content: center;
+}
+.real-pets-text-card .real-pets-card-message{
+    font-family: 'Intro Head B Base';
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 150%;
+    color: #fff;
+    margin-top: 30px;
+    margin-bottom: 30px;
+}
+.real-pets-text-card .real-pets-card-client-name{
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 140%;
+    color: #fff;
+    font-family: 'Nexa Rust Sans Book 01';
+}
+@media only screen and (max-width: 1200px) {
+  .real-pets-cards-block {
+    flex-wrap: wrap;
+    row-gap: 30px;
+  }
+  .real-pets-text-card,
+  .real-pets-image-card {
+    width: 48%;
+  }
+}
+@media only screen and (max-width: 767px) {
+  .real-pets-text-card,
+  .real-pets-image-card {
+    width: 100%;
+  }
+}

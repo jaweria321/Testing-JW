@@ -1,0 +1,209 @@
+<style>
+    .custom-pdp-wrapper {
+        display:flex;
+        padding-top: 18px;
+
+    }
+    .custom-pdp-product-images-wrapper {
+        width: 50%;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 25px;
+    }
+    .custom-pdp-product-info-wrapper {
+        width: 50%;
+        padding: 36px 0 0 72px;
+        display: flex;
+        flex-direction: column;
+        gap: 21px;
+    }
+    .custom-product-image-sm {
+        width: calc(50% - 12.5px);
+    }
+    .custom-product-image-sm img{
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 338 / 338;
+        object-fit: cover;
+    }
+    .custom-product-image-lg {
+        width: 100%;
+    }
+    .custom-product-image-lg img{
+        width: 100%;
+        height: 100%;
+        aspect-ratio: 702 / 752;
+        object-fit: cover;
+    }
+    .custom-product-varient-wrapper {
+        display: flex;
+        gap: 9px;
+        flex-wrap: wrap;
+    }
+    .custom-product-varient-wrapper input[type="radio"] {
+        display: none; /* hides the circle */
+    }
+    .custom-product-varient-wrapper label {
+        padding: 21px 24px;
+        border: 1px solid #272E22;
+        border-radius: 10px;
+        cursor: pointer;
+        width: 131px;
+        cursor: pointer;
+        text-align: center;
+        background: #FFFFF6;
+        color: #272E22;
+        font-size: 20px;
+        line-height: 20px;
+    }
+    .custom-product-varient-wrapper input[type="radio"]:checked + label,
+    .custom-product-varient-wrapper input[type="radio"]:hover + label {
+        background: #ECEADD;
+
+    }
+    .custom-product-varient-wrapper input[type="radio"]:disabled + label {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    .custom-pdp-product-info-wrapper h2,
+    .custom-pdp-product-info-wrapper p {
+        margin: 0;
+    }
+    .custom-pdp-product-info-wrapper button {
+        color: #FFFFFF;
+        width: 100%;
+        padding: 8px 30px;
+        background-color: #010101;
+        border-radius: 300px;
+        text-align: center;
+        margin-top: 36px;
+    }
+    .custom-pdp-product-info-wrapper button.btnDisabled {
+        background-color: #0000006b;
+        border-color: #0000006b;
+        cursor: no-drop;
+    }
+    .breadcrumb {
+  font-size: 14px;
+  margin: 10px 0;
+}
+.breadcrumb a {
+  text-decoration: none;
+  color: #333;
+}
+.breadcrumb span {
+  color: #999;
+}
+    @media screen and (max-width: 767px) {
+        .custom-pdp-wrapper {
+            flex-direction: column;
+        }
+        .custom-pdp-product-images-wrapper {
+            width: 100%;
+        }
+        .custom-pdp-product-info-wrapper {
+            width: 100%;
+            padding: 36px;
+        }
+    }
+</style>
+<div class="custom-pdp-section section-{{ section.id }}">
+    <div class="custom-pdp-wrapper page-width">
+        <div class="custom-pdp-product-images-wrapper">
+            {% for image in product.images %} 
+                {%if forloop.index == 3 %}
+                    <div class="custom-product-image-lg">
+                        {{ image | image_url: width: 1000 | image_tag: height: 1000 }}
+                    </div>
+                {% else %}
+                    <div class="custom-product-image-sm">
+                        {{ image | image_url: width: 1000 | image_tag: height: 1000 }}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <div class="custom-pdp-product-info-wrapper"> 
+            {% render "breadcrumb" %} 
+            <h2>{{ product.title }}</h2>
+            <p>{{ product.description }}</p>
+            <form id="custom-product-form">
+                <div class="custom-product-varient-wrapper">
+                    {% for variant in product.variants %}
+                        <input
+                            type="radio"
+                            name="colorVarient" 
+                            id="variant-{{ variant.id }}"
+                            value="{{ variant.id }}"
+                            {% if variant == product.selected_or_first_available_variant %}checked{% endif %}
+                            {% unless variant.available %}data-unavaiable=true{% endunless %}
+                        >
+                        <label for="variant-{{ variant.id }}">
+                            {{ variant.title }}
+                        </label>
+                    {% endfor %}
+                </div>
+                <button id="addToCartBtn" type="submit">Add to cart</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    const radios = document.querySelectorAll('input[name="colorVarient"]');
+    const button = document.getElementById('addToCartBtn');
+    radios.forEach(radio => {
+        radio.addEventListener('change', () => {
+            
+            const checked = document.querySelector('input[name="colorVarient"]:checked');
+            if(checked.dataset.unavaiable === "true") {
+                console.log("disable");
+                button.classList.add("btnDisabled");
+                button.textContent="this varient is unavaiable";
+            } else {
+                console.log("enable");
+                button.classList.remove("btnDisabled");
+                button.textContent="Add to Cart";
+            }
+            
+        });
+    });
+document.querySelector('#custom-product-form').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const formData = new FormData(this);
+  const variantId = formData.get('colorVarient'); // Selected variant ID
+
+  fetch('/cart/add.js', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      id: variantId,
+      quantity: 1
+    })
+  })
+  .then(res => res.json())
+  .then(data => {
+    
+    console.log('Added:', data);
+  })
+  .catch(err => {
+    console.error('Error adding to cart:', err);
+  });
+});
+
+</script>
+{% schema %}
+{
+  "name": "Custom Pdp",
+  "tag": "section",
+  "class": "section",
+  "settings": [
+
+  ],
+  "presets": [
+    {
+      "name": "Custom Pdp"
+    }
+  ]
+}
+{% endschema %}
